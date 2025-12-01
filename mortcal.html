@@ -290,7 +290,7 @@
 
     <div class="container">
         <header>
-            <h1>專業按揭還款計算器</h1>
+            <h1>按揭還款計算器</h1>
             <p>使用等額本息法，精準計算您的每月供款與分期攤還詳情。</p>
         </header>
 
@@ -300,7 +300,7 @@
                 
                 <div class="input-row">
                     <div class="form-group">
-                        <label for="property-value">物業價值 (港元)</label>
+                        <label for="property-value">物業價值</label>
                         <input type="text" id="property-value" class="numeric-input" min="100000" required inputmode="numeric" pattern="[0-9,]*">
                     </div>
                     
@@ -314,7 +314,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>按揭銀碼 (貸款總額)</label>
+                    <label>貸款額</label>
                     <div class="loan-amount-display" id="calculated-principal">HKD --</div>
                 </div>
 
@@ -372,12 +372,12 @@
             <table id="schedule-table">
                 <thead>
                     <tr>
-                        <th>期數 (月)</th>
-                        <th>餘下初始餘額 (HKD)</th>
-                        <th>每月供款額 (HKD)</th>
-                        <th>供款利息部分 (HKD)</th>
-                        <th>供款本金部分 (HKD)</th>
-                        <th>還完之後餘額 (HKD)</th>
+                        <th>期數</th>
+                        <th>期初餘額 (HKD)</th>
+                        <th>總供款額 (HKD)</th>
+                        <th>利息部分 (HKD)</th>
+                        <th>本金部分 (HKD)</th>
+                        <th>期末餘額 (HKD)</th>
                     </tr>
                 </thead>
                 <tbody>

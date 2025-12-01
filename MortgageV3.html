@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 專業按揭計算器 - 宏利風格</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 🎨 CSS 樣式：模擬 Manulife.com.hk 的專業風格 */
+
+        :root {
+            --primary-color: #003366; /* 宏利深藍色 */
+            --secondary-color: #00a88f; /* 宏利綠色/行動呼籲色 */
+            --background-color: #f4f6f9; /* 輕微灰的背景 */
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-radius: 6px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 柔和陰影 */
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.5em;
+            border-bottom: 3px solid var(--secondary-color); 
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+        
+        header p {
+            color: #555;
+        }
+
+        /* 輸入與結果卡片佈局 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--primary-color); /* 強調專業感 */
+        }
+
+        /* 輸入表單樣式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 1em;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 24px); 
+            padding: 12px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 51, 102, 0.25); 
+        }
+
+        .input-addon {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-addon span {
+            margin-left: 10px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* 計算按鈕 */
+        #calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--secondary-color); 
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        #calculate-btn:hover {
+            background-color: #007f6e; 
+        }
+        #calculate-btn:active {
+            transform: scale(0.99);
+        }
+
+        /* 結果顯示樣式 */
+        #result-output {
+            text-align: center;
+            display: none; 
+        }
+
+        .monthly-payment-box {
+            background-color: #e6f7ff; 
+            border: 1px solid var(--primary-color);
+            padding: 25px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .payment-label {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 400;
+        }
+
+        .payment-amount {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: var(--secondary-color); 
+            line-height: 1;
+        }
+
+        /* 總結數據行 */
+        #result-output p {
+            font-size: 1em;
+            text-align: left;
+            margin: 8px 0;
+        }
+
+        #result-output strong {
+            color: var(--primary-color);
+        }
+        #result-output span {
+            font-weight: 700;
+        }
+
+        /* 表格樣式 */
+        #amortization-schedule {
+            display: none; 
+            width: 100%;
+            overflow-x: auto; 
+            margin-top: 30px;
+        }
+        
+        #amortization-schedule h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            box-shadow: var(--shadow); 
+        }
+
+        #schedule-table thead {
+            background-color: var(--primary-color);
+            color: white;
+            position: sticky; 
+            top: 0;
+            z-index: 10;
+        }
+
+        #schedule-table th, #schedule-table td {
+            padding: 12px 15px;
+            text-align: right;
+            border: 1px solid #e9ecef; 
+        }
+
+        #schedule-table th:first-child, #schedule-table td:first-child {
+            text-align: center; 
+        }
+
+        #schedule-table tbody tr:nth-child(even) {
+            background-color: #f8f8f8; 
+        }
+
+        #schedule-table tbody tr:hover {
+            background-color: #eef2f5; 
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>專業按揭還款計算器</h1>
+            <p>使用等額本息法，精準計算您的每月供款與分期攤還詳情。</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="card input-card">
+                <h2>輸入按揭資訊</h2>
+                
+                <div class="form-group">
+                    <label for="property-value">物業價值 (港元)</label>
+                    <input type="number" id="property-value" value="5000000" min="100000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loan-percentage">按揭成數 (%)</label>
+                    <div class="input-addon">
+                        <input type="number" id="loan-percentage" value="70" min="1" max="100" required>
+                        <span>%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loan-term">按揭年期 (年)</label>
+                    <div class="input-addon">
+                        <input type="number" id="loan-term" value="25" min="1" max="50" required>
+                        <span>年</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="annual-rate">按揭年利率 (%)</label>
+                    <div class="input-addon">
+                        <input type="number" id="annual-rate" value="4.125" min="0.01" step="0.01" required>
+                        <span>%</span>
+                    </div>
+                </div>
+                
+                <button id="calculate-btn">開始計算</button>
+            </div>
+
+            <div class="card" id="result-output">
+                <h2>計算結果總覽</h2>
+
+                <div class="monthly-payment-box">
+                    <div class="payment-label">每月供款額 (港元)</div>
+                    <div class="payment-amount" id="monthly-payment-amount">--</div>
+                </div>
+
+                <div style="margin-top: 30px; text-align: left;">
+                    <p><strong>貸款總額:</strong> <span id="total-loan-principal">--</span> HKD</p>
+                    <p><strong>還款總利息:</strong> <span id="total-interest-paid">--</span> HKD</p>
+                    <p><strong>總還款額:</strong> <span id="total-repayment">--</span> HKD</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="amortization-schedule">
+            <h2>按揭分期攤還表 (細節)</h2>
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>期數 (月)</th>
+                        <th>餘下初始餘額 (HKD)</th>
+                        <th>每月供款額 (HKD)</th>
+                        <th>供款利息部分 (HKD)</th>
+                        <th>供款本金部分 (HKD)</th>
+                        <th>還完之後餘額 (HKD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 💻 JavaScript 邏輯：按揭計算核心
+
+        const propertyValueInput = document.getElementById('property-value');
+        const loanPercentageInput = document.getElementById('loan-percentage');
+        const loanTermInput = document.getElementById('loan-term');
+        const annualRateInput = document.getElementById('annual-rate');
+        const calculateBtn = document.getElementById('calculate-btn');
+        
+        const resultOutput = document.getElementById('result-output');
+        const monthlyPaymentAmount = document.getElementById('monthly-payment-amount');
+        const totalLoanPrincipal = document.getElementById('total-loan-principal');
+        const totalInterestPaid = document.getElementById('total-interest-paid');
+        const totalRepayment = document.getElementById('total-repayment');
+        const amortizationSchedule = document.getElementById('amortization-schedule');
+        const scheduleTableBody = document.querySelector('#schedule-table tbody');
+
+        /**
+         * 格式化數字為千位分隔符，並保留小數點後兩位
+         * @param {number} num 
+         * @returns {string} 
+         */
+        const formatCurrency = (num) => {
+            return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
+        /**
+         * 核心計算：等額本息還款法（PMT 公式）
+         * @param {number} P - 貸款本金 (Principal)
+         * @param {number} r - 月利率 (Monthly Interest Rate)
+         * @param {number} n - 總期數 (Total Number of Payments)
+         * @returns {number} 每月供款額
+         */
+        function calculateMonthlyPayment(P, r, n) {
+            if (r === 0) {
+                return P / n;
+            }
+            // 等額本息公式：M = P [ r(1 + r)^n ] / [ (1 + r)^n – 1 ]
+            const power = Math.pow(1 + r, n);
+            const monthlyPayment = P * (r * power) / (power - 1);
+            return monthlyPayment;
+        }
+
+        /**
+         * 綁定計算按鈕事件
+         */
+        calculateBtn.addEventListener('click', () => {
+            // 1. 獲取並處理輸入參數
+            const propertyValue = parseFloat(propertyValueInput.value);
+            const loanPercentage = parseFloat(loanPercentageInput.value) / 100;
+            const loanTermYears = parseFloat(loanTermInput.value);
+            const annualRate = parseFloat(annualRateInput.value) / 100;
+
+            // 參數檢查
+            if (isNaN(propertyValue) || isNaN(loanPercentage) || isNaN(loanTermYears) || isNaN(annualRate) || propertyValue <= 0 || loanTermYears <= 0) {
+                alert('請輸入有效的按揭參數！');
+                return;
+            }
+
+            // 換算成計算所需單位
+            const principal = propertyValue * loanPercentage; // 貸款本金 (P)
+            const monthlyRate = annualRate / 12; // 月利率 (r)
+            const totalPayments = loanTermYears * 12; // 總月數 (n)
+            
+            // 2. 計算每月供款額
+            const monthlyPayment = calculateMonthlyPayment(principal, monthlyRate, totalPayments);
+
+            // 3. 生成分期攤還表並計算總利息
+            let remainingBalance = principal;
+            let totalInterest = 0;
+            scheduleTableBody.innerHTML = ''; // 清空舊的表格內容
+
+            for (let month = 1; month <= totalPayments; month++) {
+                const startBalance = remainingBalance;
+                
+                // 計算當月利息 C = A * r
+                const interestPayment = startBalance * monthlyRate;
+                totalInterest += interestPayment;
+                
+                // 計算當月本金 D = B - C
+                let principalPayment = monthlyPayment - interestPayment;
+
+                // 修正最後一期計算誤差
+                if (month === totalPayments) {
+                    principalPayment = remainingBalance; // 最後一期本金剛好等於剩餘本金
+                    remainingBalance = 0;
+                } else {
+                    remainingBalance -= principalPayment;
+                }
+
+                // 確保餘額不會是極小的負數（由於浮點數誤差）
+                if (remainingBalance < 0 && month === totalPayments) {
+                    remainingBalance = 0;
+                }
+                
+                // 創建表格行 (tr)
+                const row = scheduleTableBody.insertRow();
+                
+                // 填充表格數據 (td)
+                row.insertCell(0).textContent = month; // 期數
+                row.insertCell(1).textContent = formatCurrency(startBalance); // 餘下初始餘額
+                row.insertCell(2).textContent = formatCurrency(monthlyPayment); // 每月供款額
+                row.insertCell(3).textContent = formatCurrency(interestPayment); // 供款利息部分
+                row.insertCell(4).textContent = formatCurrency(principalPayment); // 供款本金部分
+                row.insertCell(5).textContent = formatCurrency(remainingBalance); // 還完之後餘額
+            }
+
+            // 4. 顯示結果總結
+            const totalRepay = principal + totalInterest;
+
+            monthlyPaymentAmount.textContent = formatCurrency(monthlyPayment);
+            totalLoanPrincipal.textContent = formatCurrency(principal);
+            totalInterestPaid.textContent = formatCurrency(totalInterest);
+            totalRepayment.textContent = formatCurrency(totalRepay);
+
+            // 顯示結果區和表格
+            resultOutput.style.display = 'block';
+            amortizationSchedule.style.display = 'block';
+        });
+
+        // 頁面加載時自動執行一次計算，以顯示初始值
+        window.onload = () => {
+             // 確保所有輸入元素已加載，再模擬點擊
+             if(propertyValueInput.value) { 
+                 calculateBtn.click();
+             }
+        };
+
+    </script>
+</body>
+</html>
